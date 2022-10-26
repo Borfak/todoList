@@ -89,7 +89,6 @@ function newElement() {
   }
 }
 
-//when press enter key call newElement function
 document.addEventListener("keyup", function (event) {
   event.preventDefault();
   if (event.key === 'Enter') {
