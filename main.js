@@ -1,18 +1,17 @@
 const todoList = localStorage.getItem('todoList') ? JSON.parse(localStorage.getItem('todoList')) : [];
-console.log(todoList);
 const ul = document.getElementById('myUL');
 const checkedElements = localStorage.getItem('CheckedElements') ? JSON.parse(localStorage.getItem('CheckedElements')) : [];
 ul.innerHTML = todoList.map(item => {
   return `
-    <li>
-      <span class="data">${item}</span>
+    <li class="${item.isCompleted ? 'checked' : ''}">
+      <span class="data">${item.task}</span>
     </li>
   `
 }).join('');
 
 function removeItemFromList(li) {
   let text = li.firstElementChild.textContent
-  todoList.splice(todoList.indexOf(text), 1);
+  todoList.splice(todoList.indexOf({taask: text}), 1);
   li.remove();
   localStorage.setItem('todoList', JSON.stringify(todoList));
 }
@@ -42,6 +41,11 @@ for (i = 0; i < close.length; i++) {
 var list = document.querySelector('ul');
 list.addEventListener('click', function (ev) {
   if (ev.target.tagName === 'LI') {
+    let text = ev.target.firstElementChild.textContent;
+    let index = todoList.findIndex(item => item.task === text);
+    todoList[index].isCompleted = !todoList[index].isCompleted;
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+    console.log(index);
     ev.target.classList.toggle('checked');
   }
 }, false);
@@ -61,7 +65,7 @@ function newElement() {
   }
 
   document.getElementById("myUL").appendChild(li);
-  todoList.push(inputValue);
+  todoList.push({task: inputValue, isCompleted: false});
   localStorage.setItem('todoList', JSON.stringify(todoList));
   document.getElementById("todo").value = "";
 
